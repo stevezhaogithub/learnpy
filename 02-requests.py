@@ -129,4 +129,58 @@ def test11():
 #    print(res.text)
 
 
-test11()
+
+# 文件上传
+def test12():
+    files = {
+        "file": open("baidu.jpg", "rb")
+    }
+    res = requests.post("https://httpbin.org/post", files = files)
+    print(res.text)
+
+# 获取 cookie
+def test13():
+    res = requests.get("https://www.baidu.com")
+    # res = requests.get("https://www.qq.com")
+    print(res.cookies)
+    for k, v in res.cookies.items():
+        print(k + " = " + v)
+
+
+
+# 会话维持
+def test14():
+    # 1. 两次请求，相当于是两个不同的浏览器发起的，拿不到cookie
+    # 设置 cookie
+    requests.get("https://httpbin.org/cookies/set/number/1234567")
+    res = requests.get("https://httpbin.org/cookies")
+    print(res.text)
+
+# 通过 requests.Session() 拿到会话对象，再发起请求, 即可维持回话
+def test15():
+    s = requests.Session()
+    s.get("https://httpbin.org/cookies/set/number/1234567")
+    res = s.get("https://httpbin.org/cookies")
+    print(res.text)
+    
+    
+# 12306
+def test16():
+    # res = requests.get("https://www.12306.cn/", verify=True)
+    res = requests.get("https://www.12306.cn/")
+    print(res.status_code)
+    # print(res.text)
+
+
+
+# 通过代理发起请求
+# export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+def test17():
+    proxies = {
+        "http": "http://127.0.0.1:7890",
+        "https": "http://127.0.0.1:7890"
+    }
+    res = requests.get("https://www.taobao.com", proxies = proxies)
+    print(res.status_code)
+
+test17()
